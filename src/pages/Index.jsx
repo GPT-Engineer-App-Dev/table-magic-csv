@@ -8,6 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 const Index = () => {
   const [csvData, setCsvData] = useState([]);
   const [headers, setHeaders] = useState([]);
+  const [newColumnName, setNewColumnName] = useState("");
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -38,6 +39,15 @@ const Index = () => {
     const newData = [...csvData];
     newData[index][header] = value;
     setCsvData(newData);
+  };
+
+  const handleAddColumn = () => {
+    if (newColumnName && !headers.includes(newColumnName)) {
+      setHeaders([...headers, newColumnName]);
+      const newData = csvData.map(row => ({ ...row, [newColumnName]: "" }));
+      setCsvData(newData);
+      setNewColumnName("");
+    }
   };
 
   return (
@@ -76,6 +86,15 @@ const Index = () => {
               ))}
             </TableBody>
           </Table>
+          <div className="flex space-x-2">
+            <Input
+              type="text"
+              placeholder="New column name"
+              value={newColumnName}
+              onChange={(e) => setNewColumnName(e.target.value)}
+            />
+            <Button onClick={handleAddColumn}>Add Column</Button>
+          </div>
           <Button onClick={handleAddRow}>Add Row</Button>
           <CSVLink data={csvData} headers={headers} filename={"edited_data.csv"}>
             <Button>Download CSV</Button>

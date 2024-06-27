@@ -4,6 +4,7 @@ import { CSVLink } from "react-csv";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import * as XLSX from "xlsx";
 
 const Index = () => {
   const [csvData, setCsvData] = useState([]);
@@ -48,6 +49,24 @@ const Index = () => {
       setCsvData(newData);
       setNewColumnName("");
     }
+  };
+
+  const downloadExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(csvData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+    XLSX.writeFile(workbook, "edited_data.xlsx");
+  };
+
+  const downloadJSON = () => {
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+      JSON.stringify(csvData)
+    )}`;
+    const link = document.createElement("a");
+    link.href = jsonString;
+    link.download = "edited_data.json";
+
+    link.click();
   };
 
   return (
@@ -99,6 +118,8 @@ const Index = () => {
           <CSVLink data={csvData} headers={headers} filename={"edited_data.csv"}>
             <Button>Download CSV</Button>
           </CSVLink>
+          <Button onClick={downloadExcel}>Download Excel</Button>
+          <Button onClick={downloadJSON}>Download JSON</Button>
         </>
       )}
     </div>

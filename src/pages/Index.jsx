@@ -96,7 +96,7 @@ const Index = () => {
     )}`;
     const link = document.createElement("a");
     link.href = jsonString;
-    link.download = `edited_data_tab_${tabId}.json`;
+    link.download = `edited_data_tab_${tab.id}.json`;
 
     link.click();
   };
